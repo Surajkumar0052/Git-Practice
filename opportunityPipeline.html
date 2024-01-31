@@ -1,0 +1,140 @@
+<template>
+    <lightning-card>
+        <template if:true={showPipeLineTable}>
+            <div if:true={pipelineData}>
+
+                <table
+                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped slds-border_top slds-border_bottom slds-border_left slds-border_right">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center">S.No.</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center" title="Name">Name</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center" title="Location">Location
+                                </div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center" title="Billing Rate">
+                                    Billing Rate</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center" title="Duration">
+                                    Duration</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate slds-text-align_center" title="FTE">
+                                    FTE</div>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={pipelineData} for:item="pipelineObj">
+
+                            <tr class="slds-hint-parent" key={pipelineObj.Location}>
+                                <td>
+                                    <div class="slds-truncate pipelineIndex slds-text-align_center"></div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align_center">{pipelineObj.Name}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align_center">{pipelineObj.Location}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align_center">
+                                        <lightning-input value={pipelineObj.BillingRate} data-fieldname="BillingRate"
+                                            data-id={pipelineObj.Location} onchange={handleChange}></lightning-input>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align_center">{pipelineObj.TenureMonths}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-text-align_center">
+                                        <lightning-input value={pipelineObj.FTE} data-fieldname="FTE"
+                                            data-id={pipelineObj.Location} onchange={handleChange}></lightning-input>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                <footer class="slds-modal__footer" style="padding: 0.50rem 1rem;">
+                    <lightning-button variant="brand" icon-name="utility:chevronright" label="Next" title="Second"
+                        onclick={handleNextButtonClick}></lightning-button>
+                </footer>
+
+            </div>
+        </template>
+
+        <template if:false={showPipeLineTable}>
+            <div class="myTable slds-scrollable">
+                <div class="slds-grid slds-wrap">
+                    <!-- Left Lightning Layout -->
+
+                    <lightning-layout class="slds-size_6-of-12" if:true={updatedData}>
+                        <lightning-layout-item>
+                            <div class="custom-container">
+                                <!-- Left Content -->
+                                <div class="content-container">
+                                    <B>
+                                        <p class="header">Revenue</p>
+                                    </B><br>
+                                    TCV: <lightning-formatted-number value={updatedData.TCV} format-style="currency"
+                                        currency-code="USD"></lightning-formatted-number>
+                                    <!-- <div for:each={updatedData.YearList} for:item="item" for:index="index" key={item}>
+                                        Year {item.index}: <lightning-formatted-number value={item.amount}
+                                            format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                    </div> -->
+                                    <template for:each= {updatedData.YearList} for:item="item" for:index="index">
+                                        Year {item.index}: {item.amount}
+                                    </template>
+                                    ACV: <lightning-formatted-number value={updatedData.ACV} format-style="currency"
+                                        currency-code="USD"></lightning-formatted-number><br>
+                                    Current Fiscal: <lightning-formatted-number value={updatedData.CurrentFY}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number><br>
+                                    Monthly: <lightning-formatted-number value={updatedData.Month}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                </div>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                    <!-- Right Lightning Layout -->
+                    <lightning-layout class="slds-size_6-of-12" if:true={updatedData}>
+                        <lightning-layout-item>
+                            <div class="custom-container">
+                                <!-- Right Content -->
+                                <div class="content-container">
+                                    <B>
+                                        <p class="header">Expected Revenue (Discounted)</p>
+                                    </B><br>
+                                    TCV: <lightning-formatted-number value={updatedData.TCVDiscounted}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                    <div for:each={updatedData.YearListDiscounted} for:item="item" for:index="index"
+                                        key={item}>
+                                        Year {item.index}: <lightning-formatted-number value={item.amountDiscounted}
+                                            format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                    </div>
+                                    ACV: <lightning-formatted-number value={updatedData.ACVDiscounted}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number><br>
+                                    Current Fiscal: <lightning-formatted-number value={updatedData.CurrentFYDiscount}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number><br>
+                                    Monthly: <lightning-formatted-number value={updatedData.MonthDiscounted}
+                                        format-style="currency" currency-code="USD"></lightning-formatted-number>
+                                </div>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>
